@@ -1,1 +1,47 @@
-# ansible-spark
+# Ansible playbooks for Spark standalone cluster
+
+Ansible playbooks for the deployment of an Spark standalone cluster.
+
+## Usage
+
+### Defining the inventory file
+
+Create a new ansible inventory containing the IP addresses of the master and worker instances:
+
+```{shell}
+$ cat > hosts << EOL
+[master]
+<YOUR_MASTER_IP>
+
+[worker]
+<YOUR_WORKER_IP_1>
+<YOUR_WORKER_IP_2>
+<YOUR_WORKER_IP_3>
+EOL
+```
+
+### Execute the deployment
+
+Perform the deployment of spark:
+
+```{shell}
+$ ansible-playbook -i hosts spark.yml'
+```
+
+### Configuring the deployment
+
+| Variable | Description | Default value |
+|:---------|:------------|:--------------|
+| ansible_user | The user Ansible uses to log in | ubuntu |
+| spark_version | Version of Keycloak to be installed | 13.0.0 |
+| java_openjdk_version | Version of OpenJDK to be installed | 11 |
+| java_home | Delete existing installations of keycloak | false |
+| spark_hadoop_version | | 3.2 |
+| spark_force_install | | false |
+| spark_install_dir | | /opt/spark |
+| spark_eventlog_dir | | file:/tmp/spark-events |
+| spark_history_port | | 18080 |
+| spark_user_name | | spark |
+| spark_user_group | | spark |
+| java_openjdk_version | Version of OpenJDK to be installed | 11 |
+| java_home | Delete existing installations of keycloak | false |

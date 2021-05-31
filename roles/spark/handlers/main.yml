@@ -1,0 +1,36 @@
+---
+- name: Start spark cluster
+  become: "{{ spark_user_name }}"
+  shell: "sbin/start-all.sh"
+  args:
+    chdir: "{{ spark_home }}"
+  when: inventory_hostname in groups['master']
+
+- name: Stop spark cluster
+  become: "{{ spark_user_name }}"
+  block:
+    - name: Stop spark master
+      shell: "sbin/stop-master.sh"
+      args:
+        chdir: "{{ spark_home }}"
+      when: inventory_hostname in groups['master']
+
+    - name: Stop spark worker
+      shell: "sbin/stop-worker.sh"
+      args:
+        chdir: "{{ spark_home }}"
+      when: inventory_hostname in groups['worker']
+
+- name: Start history server
+  become: "{{ spark_user_name }}"
+  shell: "sbin/start-history-server.sh"
+  args:
+    chdir: "{{ spark_home }}"
+  when: inventory_hostname in groups['master']
+
+- name: Stop history server
+  become: "{{ spark_user_name }}"
+  shell: "sbin/stop-history-server.sh"
+  args:
+    chdir: "{{ spark_home }}"
+  when: inventory_hostname in groups['master']

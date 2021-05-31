@@ -1,0 +1,12 @@
+---
+- name: Install OpenJDK {{ spark_openjdk_version }}
+  become: yes
+  apt:
+    name: "openjdk-{{ spark_openjdk_version }}-jdk"
+
+- name: Set JAVA_HOME
+  become: yes
+  template:
+    src: java_home.sh.j2
+    dest: /etc/profile.d/java_home.sh
+    mode: 0644
