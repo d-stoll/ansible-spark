@@ -32,10 +32,7 @@ $ ansible-playbook -i hosts spark.yml'
 
 | Variable | Description | Default value |
 |:---------|:------------|:--------------|
-| ansible_user | The user Ansible uses to log in | ubuntu |
-| spark_version | Version of Keycloak to be installed | 13.0.0 |
-| java_openjdk_version | Version of OpenJDK to be installed | 11 |
-| java_home | Delete existing installations of keycloak | false |
+| spark_version | | 3.1.1 |
 | spark_hadoop_version | | 3.2 |
 | spark_force_install | | false |
 | spark_install_dir | | /opt/spark |
@@ -44,4 +41,4 @@ $ ansible-playbook -i hosts spark.yml'
 | spark_user_name | | spark |
 | spark_user_group | | spark |
 | java_openjdk_version | Version of OpenJDK to be installed | 11 |
-| java_home | Delete existing installations of keycloak | false |
+| java_home | Home of OpenJDK installation | /etc/alternatives/jre_openjdk |
