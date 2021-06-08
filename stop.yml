@@ -1,0 +1,6 @@
+---
+- hosts: all
+  vars:
+    spark_stop_cluster: true
+  roles:
+    - spark

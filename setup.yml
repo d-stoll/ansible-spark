@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars:
+    spark_setup_cluster: true
+    spark_start_cluster: true
+  roles:
+    - common
+    - java
+    - spark

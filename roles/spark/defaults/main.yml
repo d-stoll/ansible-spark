@@ -1,11 +1,12 @@
-spark_version: 3.1.1
+spark_version: 3.1.2
 spark_hadoop_version: 3.2
-spark_download_url: "https://www.apache.org/dyn/closer.lua/spark/spark-{{ spark_version }}/spark-{{ spark_version }}-bin-hadoop{{ spark_hadoop_version }}.tgz"
+spark_download_url: "https://downloads.apache.org/spark/spark-{{ spark_version }}/spark-{{ spark_version }}-bin-hadoop{{ spark_hadoop_version }}.tgz"
 
 spark_force_install: false
 
 spark_install_dir: /opt/spark
 spark_home: "{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ spark_hadoop_version }}"
+spark_config_dir: "{{ spark_home }}/conf"
 spark_eventlog_dir: "file:/tmp/spark-events"
 spark_history_port: 18080
 

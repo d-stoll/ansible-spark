@@ -1,0 +1,106 @@
+---
+- name: Check for an existing spark deployment
+  become: yes
+  register: existing_spark_deployment
+  stat:
+    path: "{{ spark_install_dir }}"
+
+- name: Remove old spark deployment
+  become: yes
+  file:
+    path: "{{ spark_install_dir }}"
+    state: absent
+  when: existing_spark_deployment.stat.exists and spark_force_install|bool
+
+- name: Check again for an existing spark deployment after forced removal
+  become: yes
+  register: existing_spark_deployment
+  stat:
+    path: "{{ spark_install_dir }}"
+
+- name: Executing spark deployment
+  when: not existing_spark_deployment.stat.exists
+  block:
+    - name: Create {{ spark_user_group }} group
+      become: yes
+      group:
+        name: "{{ spark_user_group }}"
+        state: present
+
+    - name: Create {{ spark_user_name }} user
+      become: yes
+      user:
+        name: "{{ spark_user_name }}"
+        groups: sudo,{{ spark_user_group }}
+        shell: /bin/bash
+        append: yes
+        create_home: yes
+
+    - name: Share master public key with cluster nodes
+      when: inventory_hostname in groups['master']
+      block:
+        - name: Generate public key
+          become: yes
+          user:
+            name: "{{ spark_user_name }}"
+            generate_ssh_key: yes
+            ssh_key_bits: 2048
+            ssh_key_file: .ssh/id_rsa
+
+        - name: Fetch public key
+          become: yes
+          fetch:
+            src: /home/{{ spark_user_name }}/.ssh/id_rsa.pub
+            dest: /tmp/id_spark_master_{{ spark_user_name }}.pub
+            flat: yes
+
+    - name: Add {{ spark_user_name }} public key to all nodes
+      become: yes
+      authorized_key:
+        user: "{{ spark_user_name }}"
+        key: "{{ lookup('file', '/tmp/id_spark_master_{{ spark_user_name }}.pub') }}"
+
+    - name: Restart SSH service
+      systemd:
+        name: ssh
+        state: restarted
+      become: yes
+
+    - name: Create spark install directory
+      become: yes
+      file:
+        dest: "{{ spark_install_dir }}"
+        state: directory
+        mode: 0744
+        owner: "{{ spark_user_name }}"
+        group: "{{ spark_user_group }}"
+
+    - name: Download and extract Spark binaries
+      become: yes
+      unarchive:
+        src: "{{ spark_download_url }}"
+        dest: "{{ spark_install_dir }}"
+        owner: "{{ spark_user_name }}"
+        group: "{{ spark_user_group }}"
+        mode: 0755
+        remote_src: yes
+
+    - name: Copy spark-defaults.conf
+      become: yes
+      template:
+        src: spark-defaults.conf.j2
+        dest: "{{ spark_config_dir }}/spark-defaults.conf"
+        mode: 0644
+        owner: "{{ spark_user_name }}"
+        group: "{{ spark_user_group }}"
+      when: inventory_hostname in groups['master']
+
+    - name: Copy workers
+      become: yes
+      template:
+        src: workers.j2
+        dest: "{{ spark_config_dir }}/workers"
+        mode: 0644
+        owner: "{{ spark_user_name }}"
+        group: "{{ spark_user_group }}"
+      when: inventory_hostname in groups['master']

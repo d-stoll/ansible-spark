@@ -1,0 +1,21 @@
+---
+- name: Stop spark master
+  become: yes
+  shell: "./sbin/stop-master.sh"
+  args:
+    chdir: "{{ spark_home }}"
+  when: inventory_hostname in groups['master']
+
+- name: Stop spark worker
+  become: yes
+  shell: "./sbin/stop-worker.sh"
+  args:
+    chdir: "{{ spark_home }}"
+  when: inventory_hostname in groups['worker']
+
+- name: Stop history server
+  become: yes
+  shell: "./sbin/stop-history-server.sh"
+  args:
+    chdir: "{{ spark_home }}"
+  when: inventory_hostname in groups['master']

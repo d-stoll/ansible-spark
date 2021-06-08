@@ -1,8 +1,8 @@
 ---
-- name: Install OpenJDK {{ spark_openjdk_version }}
+- name: Install OpenJDK {{ java_version }}
   become: yes
   apt:
-    name: "openjdk-{{ spark_openjdk_version }}-jdk"
+    name: "openjdk-{{ java_version }}-jdk"
 
 - name: Set JAVA_HOME
   become: yes

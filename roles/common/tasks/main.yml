@@ -12,6 +12,12 @@
     upgrade: dist
     force_apt_get: yes
 
+- name: Install required packages
+  become: yes
+  apt:
+    pkg:
+      - unzip
+
 - name: Check if reboot is needed
   become: yes
   register: reboot_required
