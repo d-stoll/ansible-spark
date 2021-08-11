@@ -46,11 +46,12 @@
             generate_ssh_key: yes
             ssh_key_bits: 2048
             ssh_key_file: .ssh/id_rsa
+          register: user_output
 
         - name: Fetch public key
           become: yes
           fetch:
-            src: /home/{{ spark_user_name }}/.ssh/id_rsa.pub
+            src: "{{ user_output.ssh_key_file }}.pub"
             dest: /tmp/id_spark_master_{{ spark_user_name }}.pub
             flat: yes
 
