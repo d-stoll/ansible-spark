@@ -1,0 +1,40 @@
+---
+- name: Install cifs-utils package
+  become: yes
+  apt:
+    pkg:
+      - cifs-utils
+
+- name: Create temporary fstab file to hide secrets
+  file:
+    path: /tmp/tmp.fstab
+    owner: root
+    group: 0
+    mode: '0700'
+    state: touch
+  become: true
+
+- name: Create mount path
+  file:
+    path: "{{ mount_path }}"
+    owner: 1001
+    group: 1001
+    mode: '0755'
+    state: directory
+  become: true
+
+- name: Mount network share
+  ansible.posix.mount:
+    src: "{{ mount_src }}"
+    path: "{{ mount_path }}"
+    fstype: "{{ mount_fstype }}"
+    opts: "{{ mount_ops }}"
+    state: mounted
+    fstab: /tmp/tmp.fstab
+  become: true
+
+- name: Delete temporary fstab file
+  file:
+    path: /tmp/tmp.fstab
+    state: absent
+  become: true

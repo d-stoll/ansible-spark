@@ -4,3 +4,4 @@
     spark_start_cluster: true
   roles:
     - spark
+    - nfs

@@ -25,6 +25,7 @@
       become: yes
       group:
         name: "{{ spark_user_group }}"
+        gid: 1001
         state: present
 
     - name: Create {{ spark_user_name }} user
@@ -32,6 +33,7 @@
       user:
         name: "{{ spark_user_name }}"
         groups: sudo,{{ spark_user_group }}
+        uid: 1001
         shell: /bin/bash
         append: yes
         create_home: yes

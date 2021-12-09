@@ -20,12 +20,24 @@ $ cat > hosts << EOL
 EOL
 ```
 
-### Execute the deployment
+### Execute the playbooks
 
-Perform the deployment of spark:
+To setup the spark cluster, execute:
 
 ```{shell}
-$ ansible-playbook -i hosts spark.yml'
+$ ansible-playbook -i hosts setup-cluster.yml'
+```
+
+To start the spark cluster, execute:
+
+```{shell}
+$ ansible-playbook -i hosts start-cluster.yml'
+```
+
+To stop the spark cluster, execute:
+
+```{shell}
+$ ansible-playbook -i hosts stop-cluster.yml'
 ```
 
 ### Configuring the deployment

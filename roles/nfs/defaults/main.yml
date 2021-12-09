@@ -1,0 +1,10 @@
+mount_nfs_share: false
+
+mount_username: <YOUR_USERNAME>
+mount_password: <YOUR_PASSWORD>
+
+mount_src: <PATH_TO_YOUR_SHARE>
+
+mount_path: /mnt/nfs
+mount_fstype: cifs
+mount_ops: username={{ mount_username }},password=,domain=ADS,vers=3.1.1,nodfs,uid=1001,gid=1001
